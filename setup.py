@@ -17,21 +17,21 @@ with open(path.join(here, 'README.rst'), encoding='utf-8') as f:
     long_description = f.read()
 
 setup(
-    name='adafruit-circuitpython-i2c-button',
+    name='circuitpython-i2c-button',
 
     use_scm_version=True,
     setup_requires=['setuptools_scm'],
 
-    description='I2C Button ala Sparkfun Qwiic Arcade Button',
+    description='I2C Button ala Sparkfun Qwiic Button/Switch/Arcade',
     long_description=long_description,
     long_description_content_type='text/x-rst',
 
     # The project's main homepage.
-    url='https://github.com/adafruit/Adafruit_CircuitPython_i2c_button',
+    url='https://github.com/gmparis/CircuitPython_I2C_Button',
 
     # Author details
-    author='Adafruit Industries',
-    author_email='circuitpython@adafruit.com',
+    author='Gregory M Paris',
+    author_email='gregory@paris.name',
 
     install_requires=[
         'Adafruit-Blinka',
@@ -54,7 +54,7 @@ setup(
     ],
 
     # What does your project relate to?
-    keywords='adafruit blinka circuitpython micropython i2c_button',
+    keywords='adafruit circuitpython micropython sparkfun i2c_button',
 
     # You can just specify the packages manually here if your project is
     # simple. Or you can use find_packages().

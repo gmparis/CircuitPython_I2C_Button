@@ -46,6 +46,15 @@ Usage Example
 
 See examples/i2c_button_simpletest.py for a more extensive example.
 
+Credits
+============
+
+This library is based upon the Sparkfun and SparkX Arduino library and firmware
+authored by Nathan Seidle, Fischer Moseley and Priyanka Makin.
+
+* `Library: https://github.com/sparkfun/SparkFun_Qwiic_Button_Arduino_Library`_
+* `Firmware: https://github.com/sparkfunX/Qwiic_Switch`_
+
 Contributing
 ============
 
