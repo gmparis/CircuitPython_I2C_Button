@@ -38,10 +38,12 @@ Table of Contents
     Download <https://github.com/gmparis/CircuitPython_i2c_button/releases/latest>
     CircuitPython Reference Documentation <https://circuitpython.readthedocs.io>
     CircuitPython Support Forum <https://forums.adafruit.com/viewforum.php?f=60>
-    Discord Chat <https://adafru.it/discord>
+    Sparkfun Qwiic System Forum <https://forum.sparkfun.com/viewforum.php?f=105>
+    Adafruit Discord Chat <https://adafru.it/discord>
     Adafruit Learning System <https://learn.adafruit.com>
     Adafruit Blog <https://blog.adafruit.com>
     Adafruit Store <https://www.adafruit.com>
+    Sparkfun Store <https://sparkfun.com>
 
 Indices and tables
 ==================
