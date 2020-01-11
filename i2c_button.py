@@ -53,8 +53,8 @@ Implementation Notes
 """
 
 # imports
-from adafruit_bus_device.i2c_device import I2CDevice
 from collections import namedtuple
+from adafruit_bus_device.i2c_device import I2CDevice
 
 __version__ = "0.0.0-auto.0"
 __repo__ = "https://github.com/gmparis/CircuitPython_i2c_button.git"
@@ -79,7 +79,6 @@ _QS = namedtuple('_QS', ('empty', 'full'))
 
 class ButtonError(Exception):
     """Button-related error conditions."""
-    pass
 
 def _read_register(button, register, n_bytes=1):
 #   """Write the register number, read back the value."""
@@ -129,8 +128,10 @@ class I2C_Button():
 
     def __repr__(self):
         return '%s(%s, %s, %s)' % (self.__class__.__name__,
-                repr(self.i2c), hex(self.i2c_addr), hex(self.dev_id))
-    
+                                   repr(self.i2c),
+                                   hex(self.i2c_addr),
+                                   hex(self.dev_id))
+
     # registers
     dev_id = _Reg(0x00, 1, True) # ID (ro)
     _fwmin = _Reg(0x01, 1, True) # FIRMWARE_MINOR (ro)
@@ -158,11 +159,8 @@ class I2C_Button():
     @property
     def status(self):
         """Button status (available, been_clicked, is_pressed tuple)."""
-        s = self._bs
-        return _BS(
-            (s&_BS_EVENT != 0),
-            (s&_BS_CLICKED != 0),
-            (s&_BS_PRESSED != 0))
+        intval = self._bs
+        return _BS((intval&_BS_EVENT != 0), (intval&_BS_CLICKED != 0), (intval&_BS_PRESSED != 0))
 
     def clear(self):
         """Reset button status."""
@@ -170,18 +168,18 @@ class I2C_Button():
 
     def _qstat(self, which):
 #       """Get the status (empty, full tuple) of the specifed queue."""
-        v = getattr(self, which)
-        return _QS((v&_QS_EMPTY != 0), (v&_QS_FULL != 0))
+        intval = getattr(self, which)
+        return _QS((intval&_QS_EMPTY != 0), (intval&_QS_FULL != 0))
 
     def _qpop(self, which):
 #       """Request pop of the specified queue."""
-        s = self._qstat(which)
-        v = _QS_POP
-        if s.empty:
-            v |= _QS_EMPTY
-        if s.full:
-            v |= _QS_FULL
-        setattr(self, which, v)
+        stat = self._qstat(which)
+        intval = _QS_POP
+        if stat.empty:
+            intval |= _QS_EMPTY
+        if stat.full:
+            intval |= _QS_FULL
+        setattr(self, which, intval)
 
     @property
     def click_queue(self):
@@ -212,12 +210,12 @@ class I2C_Button():
     @property
     def interrupts(self):
         """Interrupts settings (on_click, on_press tuple)."""
-        s = self._int
-        return _INT((s&_INT_CL != 0), (s&_INT_PR != 0))
- 
+        intval = self._int
+        return _INT((intval&_INT_CL != 0), (intval&_INT_PR != 0))
+
     def set_on_click(self, enable=True):
         """Enable or disable on_click interrupt.
- 
+
             :param enable: True to enable interrupt (default)
         """
         if enable:
@@ -227,11 +225,10 @@ class I2C_Button():
 
     def set_on_press(self, enable=True):
         """Enable or disable on_press interrupt.
- 
+
             :param enable: True to enable interrupt (default)
         """
         if enable:
             self._int |= _INT_PR
         else:
             self._int &= ~_INT_PR & 0xff
-
