@@ -78,7 +78,7 @@ _QS_FULL = 0x4 # user immutable
 _QS = namedtuple('_QS', ('empty', 'full'))
 
 class ButtonError(Exception):
-#   """Button-related error conditions."""
+    """Button-related error conditions."""
     pass
 
 def _read_register(button, register, n_bytes=1):
@@ -152,12 +152,12 @@ class I2C_Button():
 
     @property
     def version(self):
-#       """Return firmware version number."""
+        """Return firmware version number."""
         return (self._fwmaj << 8) | self._fwmin
 
     @property
     def status(self):
-#       """Button status (available, been_clicked, is_pressed)."""
+        """Button status (available, been_clicked, is_pressed)."""
         s = self._bs
         return _BS(
             (s&_BS_EVENT != 0),
@@ -165,7 +165,7 @@ class I2C_Button():
             (s&_BS_PRESSED != 0))
 
     def clear(self):
-#       """Reset button status."""
+        """Reset button status."""
         self._bs = 0
 
     def _qstat(self, which):
@@ -185,11 +185,11 @@ class I2C_Button():
 
     @property
     def click_queue(self):
-#       """Status of the click queue (empty, full).""
+        """Status of the click queue (empty, full)."""
         return self._qstat('_clqs')
 
     def pop_click_queue(self):
-#       """Grab the time in ms since first clicked, then pop the click queue."""
+        """Grab the time in ms since first clicked, then pop the click queue."""
         if self.click_queue.empty:
             raise ButtonError('click queue is empty')
         qtm = self.first_click_ms # oldest click
@@ -198,11 +198,11 @@ class I2C_Button():
 
     @property
     def press_queue(self):
-#       """Status of the press queue (empty, full).""
+        """Status of the press queue (empty, full)."""
         return self._qstat('_prqs')
 
     def pop_press_queue(self):
-#       """Grab the time in ms since first pressed, then pop the press queue."""
+        """Grab the time in ms since first pressed, then pop the press queue."""
         if self.press_queue.empty:
             raise ButtonError('press queue is empty')
         qtm = self.first_press_ms # oldest press
@@ -211,25 +211,25 @@ class I2C_Button():
 
     @property
     def interrupts(self):
-#       """Return interrupts settings (on_click, on_press)."""
+        """Return interrupts settings (on_click, on_press)."""
         s = self._int
         return _INT((s&_INT_CL != 0), (s&_INT_PR != 0))
  
     def set_on_click(self, enable=True):
-#       """Enable or disable on_click interrupt.
-#
-#           :param enable: True to enable interrupt (default)
-#       """
+        """Enable or disable on_click interrupt.
+ 
+            :param enable: True to enable interrupt (default)
+        """
         if enable:
             self._int |= _INT_CL
         else:
             self._int &= ~_INT_CL & 0xff
 
     def set_on_press(self, enable=True):
-#       """Enable or disable on_press interrupt.
-#
-#           :param enable: True to enable interrupt (default)
-#       """
+        """Enable or disable on_press interrupt.
+ 
+            :param enable: True to enable interrupt (default)
+        """
         if enable:
             self._int |= _INT_PR
         else:
