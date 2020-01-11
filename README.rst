@@ -52,8 +52,8 @@ Credits
 This library is based upon the Sparkfun and SparkX Arduino library and firmware
 authored by Nathan Seidle, Fischer Moseley and Priyanka Makin.
 
-* `Library: https://github.com/sparkfun/SparkFun_Qwiic_Button_Arduino_Library`_
-* `Firmware: https://github.com/sparkfunX/Qwiic_Switch`_
+* Library: `https://github.com/sparkfun/SparkFun_Qwiic_Button_Arduino_Library`
+* Firmware: `https://github.com/sparkfunX/Qwiic_Switch`
 
 Contributing
 ============
