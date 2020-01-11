@@ -30,10 +30,10 @@ Demonstrate CircuitPython I2C Button (ala Sparkfun Qwiic Button/Switch/Arcade)
 """
 
 # imports
-import board
-import busio
 import time
 from random import randint
+import board
+import busio
 from i2c_button import I2C_Button
 
 # initialize I2C
