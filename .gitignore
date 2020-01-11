@@ -1,4 +1,3 @@
-*.mpy
 .idea
 __pycache__
 _build
