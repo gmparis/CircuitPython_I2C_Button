@@ -13,7 +13,7 @@ Introduction
     :target: https://github.com/gmparis/CircuitPython_i2c_button/actions
     :alt: Build Status
 
-I2C Button ala Sparkfun Qwiic Button/Switch/Arcade
+CircuitPython I2C Button ala Sparkfun Qwiic Button/Switch/Arcade
 
 
 Dependencies
