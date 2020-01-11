@@ -152,12 +152,12 @@ class I2C_Button():
 
     @property
     def version(self):
-        """Return firmware version number."""
+        """Firmware version number."""
         return (self._fwmaj << 8) | self._fwmin
 
     @property
     def status(self):
-        """Button status (available, been_clicked, is_pressed)."""
+        """Button status (available, been_clicked, is_pressed tuple)."""
         s = self._bs
         return _BS(
             (s&_BS_EVENT != 0),
@@ -169,7 +169,7 @@ class I2C_Button():
         self._bs = 0
 
     def _qstat(self, which):
-#       """Get the status (empty, full) of the specifed queue."""
+#       """Get the status (empty, full tuple) of the specifed queue."""
         v = getattr(self, which)
         return _QS((v&_QS_EMPTY != 0), (v&_QS_FULL != 0))
 
@@ -185,11 +185,11 @@ class I2C_Button():
 
     @property
     def click_queue(self):
-        """Status of the click queue (empty, full)."""
+        """Click queue status (empty, full tuple)."""
         return self._qstat('_clqs')
 
     def pop_click_queue(self):
-        """Grab the time in ms since first clicked, then pop the click queue."""
+        """Get time since first click, pop click queue, return time."""
         if self.click_queue.empty:
             raise ButtonError('click queue is empty')
         qtm = self.first_click_ms # oldest click
@@ -198,11 +198,11 @@ class I2C_Button():
 
     @property
     def press_queue(self):
-        """Status of the press queue (empty, full)."""
+        """Press queue status (empty, full tuple)."""
         return self._qstat('_prqs')
 
     def pop_press_queue(self):
-        """Grab the time in ms since first pressed, then pop the press queue."""
+        """Get time since first press, pop click queue, return time."""
         if self.press_queue.empty:
             raise ButtonError('press queue is empty')
         qtm = self.first_press_ms # oldest press
@@ -211,7 +211,7 @@ class I2C_Button():
 
     @property
     def interrupts(self):
-        """Return interrupts settings (on_click, on_press)."""
+        """Interrupts settings (on_click, on_press tuple)."""
         s = self._int
         return _INT((s&_INT_CL != 0), (s&_INT_PR != 0))
  
