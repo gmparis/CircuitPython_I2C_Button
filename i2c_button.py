@@ -37,11 +37,11 @@ Implementation Notes
 
 **Hardware:**
 
-* `Sparkfun Qwiic Button - Red SPX-15584: <https://www.sparkfun.com/products/15584>`_
-* `Sparkfun Qwiic Button - Blue SPX-15585: <https://www.sparkfun.com/products/15585>`_
-* `Sparkfun Qwiic Switch SPX-15586: <https://www.sparkfun.com/products/15586>`_
-* `Sparkfun Qwiic Arcade - Red SPX-15591: <https://www.sparkfun.com/products/15591>`_
-* `Sparkfun Qwiic Arcade - Blue SPX-15592: <https://www.sparkfun.com/products/15592>`_
+* `Sparkfun Qwiic Button - Red SPX-15584 <https://www.sparkfun.com/products/15584>`_
+* `Sparkfun Qwiic Button - Blue SPX-15585 <https://www.sparkfun.com/products/15585>`_
+* `Sparkfun Qwiic Switch SPX-15586 <https://www.sparkfun.com/products/15586>`_
+* `Sparkfun Qwiic Arcade - Red SPX-15591 <https://www.sparkfun.com/products/15591>`_
+* `Sparkfun Qwiic Arcade - Blue SPX-15592 <https://www.sparkfun.com/products/15592>`_
 
 **Software and Dependencies:**
 
