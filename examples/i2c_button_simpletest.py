@@ -19,36 +19,14 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
-#
-# This library based upon Sparkfun's Arduino library and firmware sources:
-# github.com/sparkfun/SparkFun_Qwiic_Button_Arduino_Library/blob/master/src
-# github.com/sparkfunX/Qwiic_Switch/blob/master/Firmware/Qwiic_Button
 """
 `i2c_button_simpletest`
 ================================================================================
 
-Demonstrate I2C Button (ala Sparkfun Qwiic Button/Switch/Arcade)
+Demonstrate CircuitPython I2C Button (ala Sparkfun Qwiic Button/Switch/Arcade)
 
 
 * Author(s): Gregory M Paris
-
-Implementation Notes
---------------------
-
-**Hardware:**
-
-    * `Sparkfun Qwiic Button - Red SPX-15584: https://www.sparkfun.com/products/15584`_
-    * `Sparkfun Qwiic Button - Blue SPX-15585: https://www.sparkfun.com/products/15585`_
-    * `Sparkfun Qwiic Switch SPX-15586: https://www.sparkfun.com/products/15586`_
-    * `Sparkfun Qwiic Arcade - Red SPX-15591: https://www.sparkfun.com/products/15591`_
-    * `Sparkfun Qwiic Arcade - Blue SPX-15592: https://www.sparkfun.com/products/15592`_
-
-**Software and Dependencies:**
-
-    * Adafruit CircuitPython firmware for the supported boards:
-    https://github.com/adafruit/circuitpython/releases
-
-    * Adafruit's Bus Device library: https://github.com/adafruit/Adafruit_CircuitPython_BusDevice
 """
 
 # imports
@@ -98,4 +76,3 @@ while True:
     print('status', button.status)
     print('last click ms', button.last_click_ms)
     print('last press ms', button.last_press_ms)
-
