@@ -132,26 +132,45 @@ class I2C_Button():
                                    hex(self.i2c_addr),
                                    hex(self.dev_id))
 
-    # registers
-    #: Device ID. (1 byte, read-only)
-    dev_id = _Reg(0x00, 1, True) # ID (ro)
     _fwmin = _Reg(0x01, 1, True) # FIRMWARE_MINOR (ro)
     _fwmaj = _Reg(0x02, 1, True) # FIRMWARE_MAJOR (ro)
     _bs = _Reg(0x03, 1) # BUTTON_STATUS (see _BS flags above)
     _int = _Reg(0x04, 1) # INTERRUPT_CONFIG (see _INT flags above)
-    #: Button debounce time in milliseconds. (4 bytes, read-write)
-    debounce_ms = _Reg(0x05, 2) # BUTTON_DEBOUNCE_TIME (ms)
-    _prqs = _Reg(0x07, 1) # PRESSED_QUEUE_STATUS (see _QS flags above)
-    last_press_ms = _Reg(0x08, 4, True) # PRESSED_QUEUE_FRONT (ro) (ms)
-    first_press_ms = _Reg(0x0c, 4, True) # PRESSED_QUEUE_BACK (ro) (ms)
     _clqs = _Reg(0x10, 1) # CLICKED_QUEUE_STATUS (see _QS flags above)
-    last_click_ms = _Reg(0x11, 4, True) # CLICKED_QUEUE_FRONT (ro) (ms)
-    first_click_ms = _Reg(0x15, 4, True) # CLICKED_QUEUE_BACK (ro) (ms)
-    led_bright = _Reg(0x19, 1) # LED_BRIGHTNESS (0 - 255)
-    led_gran = _Reg(0x1a, 1) # LED_PULSE_GRANULARITY (suggest 1)
-    led_cycle_ms = _Reg(0x1b, 2) # LED_PULSE_CYCLE_TIME (ms)
-    led_off_ms = _Reg(0x1d, 2) # LED_PULSE_OFF_TIME (ms)
-    i2c_addr = _Reg(0x1f, 1) # I2C_ADDRESS
+    _prqs = _Reg(0x07, 1) # PRESSED_QUEUE_STATUS (see _QS flags above)
+
+    #: Device ID. (1 byte, read-only)
+    dev_id = _Reg(0x00, 1, True)
+
+    #: Button debounce time in milliseconds. (4 bytes, read-write)
+    debounce_ms = _Reg(0x05, 2)
+
+    #: Time since most recent press in queue in milliseconds. (4 bytes, read-only)
+    last_press_ms = _Reg(0x08, 4, True)
+
+    #: Time since oldest press in queue in milliseconds. (4 bytes, read-only)
+    first_press_ms = _Reg(0x0c, 4, True)
+
+    #: Time since most recent click in queue in milliseconds. (4 bytes, read-only)
+    last_click_ms = _Reg(0x11, 4, True)
+
+    #: Time since oldest click in queue in milliseconds. (4 bytes, read-only)
+    first_click_ms = _Reg(0x15, 4, True)
+
+    #: LED brightness, 0 - 255. (1 byte, read-write)
+    led_bright = _Reg(0x19, 1)
+
+    #: LED granularity. A value of 1 is commonly useful. (1 byte, read-write)
+    led_gran = _Reg(0x1a, 1)
+
+    #: LED pulse cycle time in milliseconds. (4 bytes, read-write)
+    led_cycle_ms = _Reg(0x1b, 2)
+
+    #: LED pulse off time in milliseconds. (4 bytes, read-write)
+    led_off_ms = _Reg(0x1d, 2)
+
+    #: Button I2C address. Change is persistent. Invalidates current I2C_Button object. (1 byte, read-write)
+    i2c_addr = _Reg(0x1f, 1)
 
     @property
     def version(self):
