@@ -109,7 +109,7 @@ class _Reg():
 
     def __set__(self, button, value):
         if self.readonly:
-            raise ButtonError('write to read-only register ' + hex(self.addr))
+            raise AttributeError('write to read-only register '+hex(self.addr))
         _write_register(button, self.addr, value, self.width)
 
 class I2C_Button():
@@ -118,6 +118,9 @@ class I2C_Button():
         :param i2c_obj: initialized I2C object
         :param i2c_addr: I2C address of the button (optional)
         :param dev_id: Device ID of the button (optional)
+
+        Raises ButtonError exception if the device at the I2C address
+        does not have the specified (default if not specified) device ID.
     """
 
     def __init__(self, i2c_obj, i2c_addr=_DEF_ADDR, dev_id=_DEV_ID):
@@ -209,7 +212,9 @@ class I2C_Button():
         return self._qstat('_clqs')
 
     def pop_click_queue(self):
-        """Get time since first click, pop click queue, return time."""
+        """Get time since first click, pop click queue, return time.
+            Raises ButtonError exception if queue is empty.
+        """
         if self.click_queue.empty:
             raise ButtonError('click queue is empty')
         qtm = self.first_click_ms # oldest click
@@ -222,7 +227,9 @@ class I2C_Button():
         return self._qstat('_prqs')
 
     def pop_press_queue(self):
-        """Get time since first press, pop press queue, return time."""
+        """Get time since first press, pop press queue, return time.
+            Raises ButtonError exception if queue is empty.
+        """
         if self.press_queue.empty:
             raise ButtonError('press queue is empty')
         qtm = self.first_press_ms # oldest press
