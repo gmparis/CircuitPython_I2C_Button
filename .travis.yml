@@ -42,7 +42,7 @@ install:
   - pip install --force-reinstall pylint==1.9.2
 
 script:
-  - pylint adafruit_pyportal.py
+  - pylint i2c_button.py
   - ([[ ! -d "examples" ]] || pylint --disable=missing-docstring,invalid-name,bad-whitespace examples/*.py)
-  - circuitpython-build-bundles --filename_prefix adafruit-circuitpython-pyportal --library_location .
+  - circuitpython-build-bundles --filename_prefix i2c_button --library_location .
   - cd docs && sphinx-build -E -W -b html . _build/html && cd ..
