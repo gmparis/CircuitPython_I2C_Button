@@ -133,11 +133,13 @@ class I2C_Button():
                                    hex(self.dev_id))
 
     # registers
+    #: Device ID. (1 byte, read-only)
     dev_id = _Reg(0x00, 1, True) # ID (ro)
     _fwmin = _Reg(0x01, 1, True) # FIRMWARE_MINOR (ro)
     _fwmaj = _Reg(0x02, 1, True) # FIRMWARE_MAJOR (ro)
     _bs = _Reg(0x03, 1) # BUTTON_STATUS (see _BS flags above)
     _int = _Reg(0x04, 1) # INTERRUPT_CONFIG (see _INT flags above)
+    #: Button debounce time in milliseconds. (4 bytes, read-write)
     debounce_ms = _Reg(0x05, 2) # BUTTON_DEBOUNCE_TIME (ms)
     _prqs = _Reg(0x07, 1) # PRESSED_QUEUE_STATUS (see _QS flags above)
     last_press_ms = _Reg(0x08, 4, True) # PRESSED_QUEUE_FRONT (ro) (ms)
