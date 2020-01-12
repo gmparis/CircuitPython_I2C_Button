@@ -81,7 +81,7 @@ class ButtonError(Exception):
     """Button-related error conditions."""
 
 def _read_register(button, register, n_bytes=1):
-#   """Write the register number, read back the value."""
+    """Write the register number, read back the value."""
     regid = register.to_bytes(1, _ENDIAN)
     buf = bytearray(n_bytes)
     with button.device as dev:
@@ -89,7 +89,7 @@ def _read_register(button, register, n_bytes=1):
     return int.from_bytes(buf, _ENDIAN)
 
 def _write_register(button, register, value, n_bytes=1):
-#   """Write the register number, write the value."""
+    """Write the register number, write the value."""
     buf = bytearray(1 + n_bytes)
     buf[0] = register
     buf[1:] = value.to_bytes(n_bytes, _ENDIAN)
@@ -169,17 +169,18 @@ class I2C_Button():
     #: LED pulse off time in milliseconds. (4 bytes, read-write)
     led_off_ms = _Reg(0x1d, 2)
 
+    # pylint: disable=line-too-long
     #: Button I2C address. Change is persistent. Invalidates current I2C_Button object. (1 byte, read-write)
     i2c_addr = _Reg(0x1f, 1)
 
     @property
     def version(self):
-        """Firmware version number."""
+        """Firmware version number. (2 bytes, read-only)"""
         return (self._fwmaj << 8) | self._fwmin
 
     @property
     def status(self):
-        """Button status (available, been_clicked, is_pressed tuple)."""
+        """Button status. ((available, been_clicked, is_pressed) tuple, read-only)"""
         intval = self._bs
         return _BS((intval&_BS_EVENT != 0), (intval&_BS_CLICKED != 0), (intval&_BS_PRESSED != 0))
 
@@ -188,12 +189,12 @@ class I2C_Button():
         self._bs = 0
 
     def _qstat(self, which):
-#       """Get the status (empty, full tuple) of the specifed queue."""
+        """Status of the specifed queue. (_QS tuple)"""
         intval = getattr(self, which)
         return _QS((intval&_QS_EMPTY != 0), (intval&_QS_FULL != 0))
 
     def _qpop(self, which):
-#       """Request pop of the specified queue."""
+        """Request pop of the specified queue."""
         stat = self._qstat(which)
         intval = _QS_POP
         if stat.empty:
@@ -204,7 +205,7 @@ class I2C_Button():
 
     @property
     def click_queue(self):
-        """Click queue status (empty, full tuple)."""
+        """Click queue status. ((empty, full) tuple, read-only)"""
         return self._qstat('_clqs')
 
     def pop_click_queue(self):
@@ -217,11 +218,11 @@ class I2C_Button():
 
     @property
     def press_queue(self):
-        """Press queue status (empty, full tuple)."""
+        """Press queue status. ((empty, full) tuple, read-only)"""
         return self._qstat('_prqs')
 
     def pop_press_queue(self):
-        """Get time since first press, pop click queue, return time."""
+        """Get time since first press, pop press queue, return time."""
         if self.press_queue.empty:
             raise ButtonError('press queue is empty')
         qtm = self.first_press_ms # oldest press
@@ -230,7 +231,7 @@ class I2C_Button():
 
     @property
     def interrupts(self):
-        """Interrupts settings (on_click, on_press tuple)."""
+        """Interrupts settings. ((on_click, on_press) tuple, read-only)"""
         intval = self._int
         return _INT((intval&_INT_CL != 0), (intval&_INT_PR != 0))
 
