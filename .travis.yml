@@ -17,25 +17,24 @@ cache:
 env:
   - DEPLOY_PYPI="false"
 
-deploy:
-  - provider: releases
-    api_key: "$GITHUB_TOKEN"
-    token: "$GITHUB_TOKEN"
-    file_glob: true
-    file: "$TRAVIS_BUILD_DIR/bundles/*"
-    skip_cleanup: true
-    overwrite: true
-    on:
-      tags: true
+#deploy:
+# - provider: releases
+#   api_key: "$GITHUB_TOKEN"
+#   file_glob: true
+#   file: "$TRAVIS_BUILD_DIR/bundles/*"
+#   skip_cleanup: true
+#   overwrite: true
+#   on:
+#     tags: true
   # TODO: Use 'travis encrypt --com -r adafruit/<repo slug>' to generate
   #       the encrypted password for adafruit-travis. Paste result below.
-  - provider: pypi
-    user: adafruit-travis
-    password:
-      secure: #-- PASTE ENCRYPTED PASSWORD HERE --#
-    on:
-      tags: true
-      condition: $DEPLOY_PYPI = "true"
+# - provider: pypi
+#   user: adafruit-travis
+#   password:
+#     secure: #-- PASTE ENCRYPTED PASSWORD HERE --#
+#   on:
+#     tags: true
+#     condition: $DEPLOY_PYPI = "true"
 
 install:
   - pip install -r requirements.txt
