@@ -23,7 +23,7 @@
 `i2c_button_simpletest`
 ================================================================================
 
-Demonstrate CircuitPython I2C Button (ala Sparkfun Qwiic Button/Switch/Arcade)
+Demonstrate CircuitPython I2C Button (Sparkfun Qwiic Button/Switch/Arcade)
 
 
 * Author(s): Gregory M Paris

@@ -22,7 +22,7 @@ setup(
     use_scm_version=True,
     setup_requires=['setuptools_scm'],
 
-    description='CircuitPython I2C Button ala Sparkfun Qwiic Button/Switch/Arcade',
+    description='CircuitPython I2C Button à la Sparkfun Qwiic Button/Switch/Arcade',
     long_description=long_description,
     long_description_content_type='text/x-rst',
 

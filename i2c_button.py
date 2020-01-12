@@ -27,7 +27,7 @@
 `i2c_button`
 ================================================================================
 
-CircuitPython I2C Button ala Sparkfun Qwiic Button/Switch/Arcade
+CircuitPython I2C Button à la Sparkfun Qwiic Button/Switch/Arcade
 
 
 * Author(s): Gregory M Paris
@@ -114,7 +114,7 @@ class _Reg():
 
 class I2C_Button():
     # pylint: disable=line-too-long
-    """I2C-connected button, ala Sparkfun Qwiic Button/Switch/Arcade
+    """I2C-connected button, à la Sparkfun Qwiic Button/Switch/Arcade
 
         :param i2c_obj: initialized I2C object
         :param i2c_addr: I2C address of the button (optional)
@@ -173,7 +173,7 @@ class I2C_Button():
     led_off_ms = _Reg(0x1d, 2)
 
     # pylint: disable=line-too-long
-    #: Button I2C address. Change is persistent. Invalidates current I2C_Button object. (1 byte; read-write)
+    #: Button I2C address. Change is persistent. Invalidates current :class:`I2C_Button` object. (1 byte; read-write)
     i2c_addr = _Reg(0x1f, 1)
 
     @property
