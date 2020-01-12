@@ -37,11 +37,11 @@ Implementation Notes
 
 **Hardware:**
 
-* `Sparkfun Qwiic Button - Red SPX-15584 <https://www.sparkfun.com/products/15584>`_
-* `Sparkfun Qwiic Button - Blue SPX-15585 <https://www.sparkfun.com/products/15585>`_
-* `Sparkfun Qwiic Switch SPX-15586 <https://www.sparkfun.com/products/15586>`_
-* `Sparkfun Qwiic Arcade - Red SPX-15591 <https://www.sparkfun.com/products/15591>`_
-* `Sparkfun Qwiic Arcade - Blue SPX-15592 <https://www.sparkfun.com/products/15592>`_
+* `Sparkfun Qwiic Button-Red <https://www.sparkfun.com/products/15584>`_
+* `Sparkfun Qwiic Button-Blue <https://www.sparkfun.com/products/15585>`_
+* `Sparkfun Qwiic Switch <https://www.sparkfun.com/products/15586>`_
+* `Sparkfun Qwiic Arcade-Red <https://www.sparkfun.com/products/15591>`_
+* `Sparkfun Qwiic Arcade-Blue <https://www.sparkfun.com/products/15592>`_
 
 **Software and Dependencies:**
 
@@ -119,8 +119,9 @@ class I2C_Button():
         :param i2c_addr: I2C address of the button (optional)
         :param dev_id: Device ID of the button (optional)
 
-        Raises ButtonError exception if the device at the I2C address
-        does not have the specified (default if not specified) device ID.
+        Raises:
+            :class:`ButtonError` if the device at the I2C address
+            does not have the specified (default if not specified) device ID.
     """
 
     def __init__(self, i2c_obj, i2c_addr=_DEF_ADDR, dev_id=_DEV_ID):
@@ -183,7 +184,7 @@ class I2C_Button():
 
     @property
     def status(self):
-        """Button status. ((available, been_clicked, is_pressed) tuple, read-only)"""
+        """Button status. ((**available**, **been_clicked**, **is_pressed**) tuple, read-only)"""
         intval = self._bs
         return _BS((intval&_BS_EVENT != 0), (intval&_BS_CLICKED != 0), (intval&_BS_PRESSED != 0))
 
@@ -192,7 +193,7 @@ class I2C_Button():
         self._bs = 0
 
     def _qstat(self, which):
-        """Status of the specifed queue. (_QS tuple)"""
+        """Status of the specifed queue. (**_QS** tuple)"""
         intval = getattr(self, which)
         return _QS((intval&_QS_EMPTY != 0), (intval&_QS_FULL != 0))
 
@@ -208,12 +209,13 @@ class I2C_Button():
 
     @property
     def click_queue(self):
-        """Click queue status. ((empty, full) tuple, read-only)"""
+        """Click queue status. ((**empty**, **full**) tuple, read-only)"""
         return self._qstat('_clqs')
 
     def pop_click_queue(self):
         """Get time since first click, pop click queue, return time.
-            Raises ButtonError exception if queue is empty.
+            Raises:
+                :class:`ButtonError` if queue is empty.
         """
         if self.click_queue.empty:
             raise ButtonError('click queue is empty')
@@ -223,12 +225,13 @@ class I2C_Button():
 
     @property
     def press_queue(self):
-        """Press queue status. ((empty, full) tuple, read-only)"""
+        """Press queue status. ((**empty**, **full**) tuple, read-only)"""
         return self._qstat('_prqs')
 
     def pop_press_queue(self):
         """Get time since first press, pop press queue, return time.
-            Raises ButtonError exception if queue is empty.
+            Raises:
+                :class:`ButtonError` if queue is empty.
         """
         if self.press_queue.empty:
             raise ButtonError('press queue is empty')
@@ -238,12 +241,12 @@ class I2C_Button():
 
     @property
     def interrupts(self):
-        """Interrupts settings. ((on_click, on_press) tuple, read-only)"""
+        """Interrupts settings. ((**on_click**, **on_press**) tuple, read-only)"""
         intval = self._int
         return _INT((intval&_INT_CL != 0), (intval&_INT_PR != 0))
 
     def set_on_click(self, enable=True):
-        """Enable or disable on_click interrupt.
+        """Enable or disable **on_click** interrupt.
 
             :param enable: True to enable interrupt (default)
         """
@@ -253,7 +256,7 @@ class I2C_Button():
             self._int &= ~_INT_CL & 0xff
 
     def set_on_press(self, enable=True):
-        """Enable or disable on_press interrupt.
+        """Enable or disable **on_press** interrupt.
 
             :param enable: True to enable interrupt (default)
         """
