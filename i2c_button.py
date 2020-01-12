@@ -113,15 +113,14 @@ class _Reg():
         _write_register(button, self.addr, value, self.width)
 
 class I2C_Button():
+    # pylint: disable=line-too-long
     """I2C-connected button, ala Sparkfun Qwiic Button/Switch/Arcade
 
         :param i2c_obj: initialized I2C object
         :param i2c_addr: I2C address of the button (optional)
         :param dev_id: Device ID of the button (optional)
 
-        Raises:
-            :class:`ButtonError` if the device at the I2C address
-            does not have the specified (default if not specified) device ID.
+        Raises :class:`ButtonError` if the device at the I2C address does not have the specified (default if not specified) device ID.
     """
 
     def __init__(self, i2c_obj, i2c_addr=_DEF_ADDR, dev_id=_DEV_ID):
@@ -143,48 +142,48 @@ class I2C_Button():
     _clqs = _Reg(0x10, 1) # CLICKED_QUEUE_STATUS (see _QS flags above)
     _prqs = _Reg(0x07, 1) # PRESSED_QUEUE_STATUS (see _QS flags above)
 
-    #: Device ID. (1 byte, read-only)
+    #: Device ID. (1 byte; read-only)
     dev_id = _Reg(0x00, 1, True)
 
-    #: Button debounce time in milliseconds. (4 bytes, read-write)
+    #: Button debounce time in milliseconds. (4 bytes; read-write)
     debounce_ms = _Reg(0x05, 2)
 
-    #: Time since most recent press in queue in milliseconds. (4 bytes, read-only)
+    #: Time since most recent press in queue in milliseconds. (4 bytes; read-only)
     last_press_ms = _Reg(0x08, 4, True)
 
-    #: Time since oldest press in queue in milliseconds. (4 bytes, read-only)
+    #: Time since oldest press in queue in milliseconds. (4 bytes; read-only)
     first_press_ms = _Reg(0x0c, 4, True)
 
-    #: Time since most recent click in queue in milliseconds. (4 bytes, read-only)
+    #: Time since most recent click in queue in milliseconds. (4 bytes; read-only)
     last_click_ms = _Reg(0x11, 4, True)
 
-    #: Time since oldest click in queue in milliseconds. (4 bytes, read-only)
+    #: Time since oldest click in queue in milliseconds. (4 bytes; read-only)
     first_click_ms = _Reg(0x15, 4, True)
 
-    #: LED brightness, 0 - 255. (1 byte, read-write)
+    #: LED brightness, 0 - 255. (1 byte; read-write)
     led_bright = _Reg(0x19, 1)
 
-    #: LED granularity. A value of 1 is commonly useful. (1 byte, read-write)
+    #: LED granularity. A value of 1 is commonly useful. (1 byte; read-write)
     led_gran = _Reg(0x1a, 1)
 
-    #: LED pulse cycle time in milliseconds. (4 bytes, read-write)
+    #: LED pulse cycle time in milliseconds. (4 bytes; read-write)
     led_cycle_ms = _Reg(0x1b, 2)
 
-    #: LED pulse off time in milliseconds. (4 bytes, read-write)
+    #: LED pulse off time in milliseconds. (4 bytes; read-write)
     led_off_ms = _Reg(0x1d, 2)
 
     # pylint: disable=line-too-long
-    #: Button I2C address. Change is persistent. Invalidates current I2C_Button object. (1 byte, read-write)
+    #: Button I2C address. Change is persistent. Invalidates current I2C_Button object. (1 byte; read-write)
     i2c_addr = _Reg(0x1f, 1)
 
     @property
     def version(self):
-        """Firmware version number. (2 bytes, read-only)"""
+        """Firmware version number. (2 bytes; read-only)"""
         return (self._fwmaj << 8) | self._fwmin
 
     @property
     def status(self):
-        """Button status. ((**available**, **been_clicked**, **is_pressed**) tuple, read-only)"""
+        """Button status. (**available**, **been_clicked**, **is_pressed** tuple; read-only)"""
         intval = self._bs
         return _BS((intval&_BS_EVENT != 0), (intval&_BS_CLICKED != 0), (intval&_BS_PRESSED != 0))
 
@@ -209,13 +208,12 @@ class I2C_Button():
 
     @property
     def click_queue(self):
-        """Click queue status. ((**empty**, **full**) tuple, read-only)"""
+        """Click queue status. (**empty**, **full** tuple; read-only)"""
         return self._qstat('_clqs')
 
     def pop_click_queue(self):
         """Get time since first click, pop click queue, return time.
-            Raises:
-                :class:`ButtonError` if queue is empty.
+            Raises :class:`ButtonError` if queue is empty.
         """
         if self.click_queue.empty:
             raise ButtonError('click queue is empty')
@@ -225,13 +223,12 @@ class I2C_Button():
 
     @property
     def press_queue(self):
-        """Press queue status. ((**empty**, **full**) tuple, read-only)"""
+        """Press queue status. (**empty**, **full** tuple; read-only)"""
         return self._qstat('_prqs')
 
     def pop_press_queue(self):
         """Get time since first press, pop press queue, return time.
-            Raises:
-                :class:`ButtonError` if queue is empty.
+            Raises :class:`ButtonError` if queue is empty.
         """
         if self.press_queue.empty:
             raise ButtonError('press queue is empty')
@@ -241,7 +238,7 @@ class I2C_Button():
 
     @property
     def interrupts(self):
-        """Interrupts settings. ((**on_click**, **on_press**) tuple, read-only)"""
+        """Interrupts settings. (**on_click**, **on_press** tuple; read-only)"""
         intval = self._int
         return _INT((intval&_INT_CL != 0), (intval&_INT_PR != 0))
 

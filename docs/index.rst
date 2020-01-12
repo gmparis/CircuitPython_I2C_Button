@@ -26,11 +26,11 @@ Table of Contents
 .. toctree::
     :caption: Related Products
 
-    Sparkfun Qwiic Button - Red SPX-15584 <https://www.sparkfun.com/products/15584>
-    Sparkfun Qwiic Button - Blue SPX-15585 <https://www.sparkfun.com/products/15585>
-    Sparkfun Qwiic Switch SPX-15586 <https://www.sparkfun.com/products/15586>
-    Sparkfun Qwiic Arcade - Red SPX-15591 <https://www.sparkfun.com/products/15591>
-    Sparkfun Qwiic Arcade - Blue SPX-15592 <https://www.sparkfun.com/products/15592>
+    Sparkfun Qwiic Button-Red <https://www.sparkfun.com/products/15584>
+    Sparkfun Qwiic Button-Blue <https://www.sparkfun.com/products/15585>
+    Sparkfun Qwiic Switch <https://www.sparkfun.com/products/15586>
+    Sparkfun Qwiic Arcade-Red <https://www.sparkfun.com/products/15591>
+    Sparkfun Qwiic Arcade-Blue <https://www.sparkfun.com/products/15592>
 
 .. toctree::
     :caption: Other Links
