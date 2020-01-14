@@ -117,23 +117,26 @@ class I2C_Button():
     """I2C-connected button, à la Sparkfun Qwiic Button/Switch/Arcade
 
         :param i2c_obj: initialized I2C object
-        :param i2c_addr: I2C address of the button (optional)
-        :param dev_id: Device ID of the button (optional)
+        :param i2c_addr: I2C address of the button
+        :param dev_id: Device ID of the button
+        :param name: a name for the button
 
         Raises :class:`ButtonError` if the device at the I2C address does not have the specified (default if not specified) device ID.
     """
 
-    def __init__(self, i2c_obj, i2c_addr=_DEF_ADDR, dev_id=_DEV_ID):
+    def __init__(self, i2c_obj, i2c_addr=_DEF_ADDR, dev_id=_DEV_ID, name='button'):
         self.i2c = i2c_obj
         self.device = I2CDevice(i2c_obj, i2c_addr)
         if self.dev_id != dev_id:
             raise ButtonError('wrong device 0x%x at address 0x%x' % (self.dev_id, i2c_addr))
+        self._name = name
 
     def __repr__(self):
-        return '%s(%s, %s, %s)' % (self.__class__.__name__,
-                                   repr(self.i2c),
-                                   hex(self.i2c_addr),
-                                   hex(self.dev_id))
+        return '%s(%s, i2c_addr=%s, dev_id=%s, name=%s)' % (self.__class__.__name__,
+                                                            repr(self.i2c),
+                                                            hex(self.i2c_addr),
+                                                            hex(self.dev_id),
+                                                            repr(self.name))
 
     _fwmin = _Reg(0x01, 1, True) # FIRMWARE_MINOR (ro)
     _fwmaj = _Reg(0x02, 1, True) # FIRMWARE_MAJOR (ro)
@@ -175,6 +178,11 @@ class I2C_Button():
     # pylint: disable=line-too-long
     #: Button I2C address. Change is persistent. Invalidates current :class:`I2C_Button` object. (1 byte; read-write)
     i2c_addr = _Reg(0x1f, 1)
+
+    @property
+    def name(self):
+        """Button name."""
+        return self._name
 
     @property
     def version(self):
