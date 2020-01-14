@@ -15,3 +15,12 @@ See how to change the button's I2C address with CircuitPython.
 .. literalinclude:: ../examples/i2c_button_change_address.py
     :caption: examples/i2c_button_change_address.py
     :linenos:
+
+Two buttons
+---------------
+
+Simpletest times two!
+
+.. literalinclude:: ../examples/i2c_button_2_buttons.py
+    :caption: examples/i2c_button_2_buttons.py
+    :linenos:
