@@ -31,7 +31,6 @@ Demonstrate CircuitPython I2C Buttons
 
 # imports
 import time
-from random import randint
 import board
 import busio
 from i2c_button import I2C_Button
@@ -60,11 +59,11 @@ snz = I2C_Button(i2c, SNZ_ADDR, name='snz')
 def button_values(button):
     """Print all public property values."""
     attrs = ('name', 'i2c_addr', 'dev_id', 'version',
-            'debounce_ms', 'interrupts',
-            'led_bright', 'led_gran', 'led_cycle_ms', 'led_off_ms',
-            'status', 
-            'press_queue', 'last_press_ms', 'first_press_ms',
-            'click_queue', 'last_click_ms', 'first_click_ms')
+             'debounce_ms', 'interrupts',
+             'led_bright', 'led_gran', 'led_cycle_ms', 'led_off_ms',
+             'status',
+             'press_queue', 'last_press_ms', 'first_press_ms',
+             'click_queue', 'last_click_ms', 'first_click_ms')
     for attr in attrs:
         print(attr, getattr(button, attr))
     print()
