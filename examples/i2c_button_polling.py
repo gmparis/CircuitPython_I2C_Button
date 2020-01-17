@@ -50,14 +50,15 @@ for bid, addr in enumerate(ADDRS):
     btn.led_cycle_ms = btn.led_off_ms = 0
 
 def clear_all():
-    for btn in buttons:
-        btn.clear()
+    """Clear status of all buttons."""
+    for cbtn in buttons:
+        cbtn.clear()
 
 # In this example, the LED associated with each button should light
 # if that button was the first one pressed in the round. (Sort of.)
 clear_all()
 while True:
-    # Next line, sleep time should be longer than debounce time. 
+    # Next line, sleep time should be longer than debounce time.
     # However, the best reason for using an I2C button is to avoid
     # a tight button-polling loop, so let's use a big sleep here.
     time.sleep(0.500)
@@ -71,7 +72,7 @@ while True:
         wbtn = clicked[0]
     else:
         # Winner is the one who *stopped clicking* first.
-        # XXX: Really should check first_click_ms, but dealing with
+        # NOTE: Really should check first_click_ms, but dealing with
         # the queue is too confusing for my small mind :)
         # NOTE: This will crash when two buttons have the same last_click_ms,
         # if the sort code is commented out in the I2C_Button definition.
