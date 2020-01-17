@@ -142,10 +142,13 @@ class I2C_Button():
     # Commment out next four methods if you don't need to compare buttons,
     # for example, by sorting them.
     def __eq__(self, other):
+        # pylint: disable=protected-access
         return self._key == other._key
     def __gt__(self, other):
+        # pylint: disable=protected-access
         return self._key > other._key
     def __lt__(self, other):
+        # pylint: disable=protected-access
         return self._key < other._key
 
     # Commment out next method if you don't need to hash buttons,
