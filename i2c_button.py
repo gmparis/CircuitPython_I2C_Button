@@ -77,6 +77,10 @@ _QS_EMPTY = 0x2 # user immutable
 _QS_FULL = 0x4 # user immutable
 _QS = namedtuple('_QS', ('empty', 'full'))
 
+def _to_qs(status):
+    """Queue status integer to **_QS** tuple."""
+    return _QS((status&_QS_EMPTY != 0), (status&_QS_FULL != 0))
+
 class ButtonError(Exception):
     """Button-related error conditions."""
 
@@ -93,7 +97,6 @@ def _write_register(button, register, value, n_bytes=1):
     buf = bytearray(1 + n_bytes)
     buf[0] = register
     buf[1:] = value.to_bytes(n_bytes, _ENDIAN)
-#   print('sending ', buf)
     with button.device as dev:
         dev.write(buf)
 
@@ -112,6 +115,10 @@ class _Reg():
             raise AttributeError('write to read-only register '+hex(self.addr))
         _write_register(button, self.addr, value, self.width)
 
+# NOTE: This class is sortable and hashable to make it easier
+# to organize buttons when one has more than a few.
+# If you don't need this functionality, you can comment out the
+# lines as noted below and save a some memory.
 class I2C_Button():
     # pylint: disable=line-too-long
     """I2C-connected button, à la Sparkfun Qwiic Button/Switch/Arcade
@@ -130,7 +137,23 @@ class I2C_Button():
         if self.dev_id != dev_id:
             raise ButtonError('wrong device 0x%x at address 0x%x' % (self.dev_id, i2c_addr))
         self._name = name
+        self._key = (name, i2c_addr) # comment out for no sorting/hashing
 
+    # Commment out next four methods if you don't need to compare buttons,
+    # for example, by sorting them.
+    def __eq__(self, other):
+        return self._key == other._key
+    def __gt__(self, other):
+        return self._key > other._key
+    def __lt__(self, other):
+        return self._key < other._key
+
+    # Commment out next method if you don't need to hash buttons,
+    # for example, by putting them in a set().
+    def __hash__(self):
+        return hash(self._key)
+
+    # Comment out next if you need a bit more memory.
     def __repr__(self):
         return '%s(%s, i2c_addr=%s, dev_id=%s, name=%s)' % (self.__class__.__name__,
                                                             repr(self.i2c),
@@ -142,8 +165,8 @@ class I2C_Button():
     _fwmaj = _Reg(0x02, 1, True) # FIRMWARE_MAJOR (ro)
     _bs = _Reg(0x03, 1) # BUTTON_STATUS (see _BS flags above)
     _int = _Reg(0x04, 1) # INTERRUPT_CONFIG (see _INT flags above)
-    _clqs = _Reg(0x10, 1) # CLICKED_QUEUE_STATUS (see _QS flags above)
     _prqs = _Reg(0x07, 1) # PRESSED_QUEUE_STATUS (see _QS flags above)
+    _clqs = _Reg(0x10, 1) # CLICKED_QUEUE_STATUS (see _QS flags above)
 
     #: Device ID. (1 byte; read-only)
     dev_id = _Reg(0x00, 1, True)
@@ -187,7 +210,7 @@ class I2C_Button():
     @property
     def version(self):
         """Firmware version number. (2 bytes; read-only)"""
-        return (self._fwmaj << 8) | self._fwmin
+        return (self._fwmaj << 8) | self._fwmin # same as Arduino library value
 
     @property
     def status(self):
@@ -199,25 +222,10 @@ class I2C_Button():
         """Reset button status."""
         self._bs = 0
 
-    def _qstat(self, which):
-        """Status of the specifed queue. (**_QS** tuple)"""
-        intval = getattr(self, which)
-        return _QS((intval&_QS_EMPTY != 0), (intval&_QS_FULL != 0))
-
-    def _qpop(self, which):
-        """Request pop of the specified queue."""
-        stat = self._qstat(which)
-        intval = _QS_POP
-        if stat.empty:
-            intval |= _QS_EMPTY
-        if stat.full:
-            intval |= _QS_FULL
-        setattr(self, which, intval)
-
     @property
     def click_queue(self):
         """Click queue status. (**empty**, **full** tuple; read-only)"""
-        return self._qstat('_clqs')
+        return _to_qs(self._clqs)
 
     def pop_click_queue(self):
         """Get time since first click, pop click queue, return time.
@@ -226,13 +234,13 @@ class I2C_Button():
         if self.click_queue.empty:
             raise ButtonError('click queue is empty')
         qtm = self.first_click_ms # oldest click
-        self._qpop('_clqs')
+        self._clqs |= _QS_POP
         return qtm
 
     @property
     def press_queue(self):
         """Press queue status. (**empty**, **full** tuple; read-only)"""
-        return self._qstat('_prqs')
+        return _to_qs(self._prqs)
 
     def pop_press_queue(self):
         """Get time since first press, pop press queue, return time.
@@ -241,7 +249,7 @@ class I2C_Button():
         if self.press_queue.empty:
             raise ButtonError('press queue is empty')
         qtm = self.first_press_ms # oldest press
-        self._qpop('_prqs')
+        self._prqs |= _QS_POP
         return qtm
 
     @property
