@@ -64,7 +64,8 @@ Usage Example
     button = I2C_Button(i2c)
     print('firmware version is', button.version)
 
-See examples/i2c_button_simpletest.py for a more extensive example.
+See examples/i2c_button_simpletest.py and other scripts in that folder
+for more extensive examples.
 
 Credits
 ============
