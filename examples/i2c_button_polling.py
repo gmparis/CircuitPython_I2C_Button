@@ -76,7 +76,7 @@ while True:
         # the queue is too confusing for my small mind :)
         # NOTE: This will crash when two buttons have the same last_click_ms,
         # if the sort code is commented out in the I2C_Button definition.
-        wbtn = sorted([(btn.last_click_ms, btn) for btn in clicked])[0][1]
+        wbtn = sorted([(btn.last_click_ms, btn) for btn in clicked])[-1][1]
     wbtn.led_bright = 255
     print(wbtn.name)
     clear_all()
