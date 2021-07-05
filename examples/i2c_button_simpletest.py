@@ -37,7 +37,7 @@ button = I2C_Button(i2c)
 
 # print some stuff
 print("firmware version", button.version)
-print("interrupts", button.interrupts)
+# print("interrupts", button.interrupts)
 print("debounce ms", button.debounce_ms)
 
 # demonstrate writing to registers

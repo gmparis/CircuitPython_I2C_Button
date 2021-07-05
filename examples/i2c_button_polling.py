@@ -57,8 +57,8 @@ while True:
         wbtn = clicked[0]
     else:
         # Winner is the one who *stopped clicking* first.
-        # NOTE: Really should check first_click_ms, but dealing with
-        # the queue is too confusing for my small mind :)
+        # NOTE: Really should check first_click_ms, but it is not
+        # useful with firmware version 257, the only one available.
         # NOTE: This will crash when two buttons have the same last_click_ms,
         # if the sort code is commented out in the I2C_Button definition.
         wbtn = sorted([(btn.last_click_ms, btn) for btn in clicked])[-1][1]

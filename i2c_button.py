@@ -124,7 +124,7 @@ class I2C_Button:
         self.device = I2CDevice(i2c_obj, i2c_addr)
         if self.dev_id != dev_id:
             raise ButtonError(
-                "wrong device 0x%x at address 0x%x" % (self.dev_id, i2c_addr)
+                f"not button {self.dev_id:02x} at i2c addr {i2c_addr:02x}"
             )
         self._name = name
         self._key = (name, i2c_addr)  # comment out for no sorting/hashing
@@ -175,12 +175,18 @@ class I2C_Button:
     last_press_ms = _Reg(0x08, 4, True)
 
     #: Time since oldest press in queue in milliseconds. (4 bytes; read-only)
+    #:
+    #: Note that with firmware version 257, there is no way to clear the
+    #: queue, so this value is less useful than it might first seem.
     first_press_ms = _Reg(0x0C, 4, True)
 
     #: Time since most recent click in queue in milliseconds. (4 bytes; read-only)
     last_click_ms = _Reg(0x11, 4, True)
 
     #: Time since oldest click in queue in milliseconds. (4 bytes; read-only)
+    #:
+    #: Note that with firmware version 257, there is no way to clear the
+    #: queue, so this value is less useful than it might first seem.
     first_click_ms = _Reg(0x15, 4, True)
 
     #: LED brightness, 0 - 255. (1 byte; read-write)
@@ -223,58 +229,96 @@ class I2C_Button:
         """Reset button status."""
         self._bs = 0
 
-    @property
-    def click_queue(self):
-        """Click queue status. (**empty**, **full** tuple; read-only)"""
-        return _to_qs(self._clqs)
+    # Commented out due to low utility.
 
-    def pop_click_queue(self):
-        """Get time since first click, pop click queue, return time.
-        Raises :class:`ButtonError` if queue is empty.
-        """
-        if self.click_queue.empty:
-            raise ButtonError("click queue is empty")
-        qtm = self.first_click_ms  # oldest click
-        self._clqs |= _QS_POP
-        return qtm
 
-    @property
-    def press_queue(self):
-        """Press queue status. (**empty**, **full** tuple; read-only)"""
-        return _to_qs(self._prqs)
+#   @property
+#   def click_queue(self):
+#       """Click queue status. (**empty**, **full** tuple; read-only)
+#
+#       The utility of this method is low if firmware version is 257.
+#       This is because the queue is not cleared by **clear()**,
+#       nor are entries removed with **pop_click_queue()**."""
+#       return _to_qs(self._clqs)
 
-    def pop_press_queue(self):
-        """Get time since first press, pop press queue, return time.
-        Raises :class:`ButtonError` if queue is empty.
-        """
-        if self.press_queue.empty:
-            raise ButtonError("press queue is empty")
-        qtm = self.first_press_ms  # oldest press
-        self._prqs |= _QS_POP
-        return qtm
+# Commented out until new firmware fixes this issue.
+#   def pop_click_queue(self):
+#       """Get time since first click, pop click queue, return time.
+#
+#       Popping the click queue does not work with firmware version 257,
+#       so this method rasies an exception in that case.
+#
+#       Raises :class:`ButtonError` if queue is empty.
+#       Raises :class:`RuntimeError` if firmware version is 257.
+#       """
+#       if self.version == 257:
+#           raise RuntimeError("unsupported by firmware version")
+#       if self.click_queue.empty:
+#           raise ButtonError("click queue is empty")
+#       qtm = self.first_click_ms  # oldest click
+#       self._clqs |= _QS_POP
+#       return qtm
 
-    @property
-    def interrupts(self):
-        """Interrupts settings. (**on_click**, **on_press** tuple; read-only)"""
-        intval = self._int
-        return _INT((intval & _INT_CL != 0), (intval & _INT_PR != 0))
+# Commented out due to low utility.
+#   @property
+#   def press_queue(self):
+#       """Press queue status. (**empty**, **full** tuple; read-only)
+#
+#       The utility of this method is low if firmware version is 257.
+#       This is because the queue is not cleared by **clear()**,
+#       nor are entries removed with **pop_press_queue()**."""
+#       return _to_qs(self._prqs)
 
-    def set_on_click(self, enable=True):
-        """Enable or disable **on_click** interrupt.
+# Commented out until new firmware fixes this issue.
+#   def pop_press_queue(self):
+#       """Get time since first press, pop press queue, return time.
+#
+#       Popping the press queue does not work with firmware version 257,
+#       so this method rasies an exception in that case.
+#
+#       Raises :class:`ButtonError` if queue is empty.
+#       Raises :class:`RuntimeError` if firmware version is 257.
+#       """
+#       if self.version == 257:
+#           raise RuntimeError("unsupported by firmware version")
+#       if self.press_queue.empty:
+#           raise ButtonError("press queue is empty")
+#       qtm = self.first_press_ms  # oldest press
+#       self._prqs |= _QS_POP
+#       return qtm
 
-        :param enable: True to enable interrupt (default)
-        """
-        if enable:
-            self._int |= _INT_CL
-        else:
-            self._int &= ~_INT_CL & 0xFF
+# Commented-out due to low utility.
+#   @property
+#   def interrupts(self):
+#       """Interrupts settings. (**on_click**, **on_press** tuple; read-only)
+#
+#       CircuitPython does not use these interrupts.
+#       """
+#       intval = self._int
+#       return _INT((intval & _INT_CL != 0), (intval & _INT_PR != 0))
 
-    def set_on_press(self, enable=True):
-        """Enable or disable **on_press** interrupt.
+# Commented-out due to low utility.
+#   def set_on_click(self, enable=True):
+#       """Enable or disable **on_click** interrupt.
+#
+#       :param enable: True to enable interrupt (default)
+#
+#       This interrupt is not used by CircuitPython.
+#       """
+#       if enable:
+#           self._int |= _INT_CL
+#       else:
+#           self._int &= ~_INT_CL & 0xFF
 
-        :param enable: True to enable interrupt (default)
-        """
-        if enable:
-            self._int |= _INT_PR
-        else:
-            self._int &= ~_INT_PR & 0xFF
+# Commented-out due to low utility.
+#   def set_on_press(self, enable=True):
+#       """Enable or disable **on_press** interrupt.
+#
+#       :param enable: True to enable interrupt (default)
+#
+#       This interrupt is not used by CircuitPython.
+#       """
+#       if enable:
+#           self._int |= _INT_PR
+#       else:
+#           self._int &= ~_INT_PR & 0xFF
