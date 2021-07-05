@@ -1,24 +1,7 @@
-# The MIT License (MIT)
+# SPDX-FileCopyrightText: Copyright (c) 2020 Greg Paris
 #
-# Copyright (c) 2020 Gregory M Paris
-#
-# Permission is hereby granted, free of charge, to any person obtaining a copy
-# of this software and associated documentation files (the "Software"), to deal
-# in the Software without restriction, including without limitation the rights
-# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-# copies of the Software, and to permit persons to whom the Software is
-# furnished to do so, subject to the following conditions:
-#
-# The above copyright notice and this permission notice shall be included in
-# all copies or substantial portions of the Software.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-# THE SOFTWARE.
+# SPDX-License-Identifier: MIT
+
 """
 `i2c_button_2_buttons`
 ================================================================================
@@ -43,30 +26,45 @@ while not i2c.try_lock():
     pass
 devices = i2c.scan()
 i2c.unlock()
-print('I2C devices found:', [hex(n) for n in devices])
-default_addr = 0x6f
+print("I2C devices found:", [hex(n) for n in devices])
+default_addr = 0x6F
 if default_addr not in devices:
-    print('warning: no device at the default button address', default_addr)
+    print("warning: no device at the default button address", default_addr)
 
 # addresses
-ACK_ADDR = 0x6e
-SNZ_ADDR = 0x6f
+ACK_ADDR = 0x6E
+SNZ_ADDR = 0x6F
 
 # initialize the buttons
-ack = I2C_Button(i2c, ACK_ADDR, name='ack')
-snz = I2C_Button(i2c, SNZ_ADDR, name='snz')
+ack = I2C_Button(i2c, ACK_ADDR, name="ack")
+snz = I2C_Button(i2c, SNZ_ADDR, name="snz")
+
 
 def button_values(button):
     """Print all public property values."""
-    attrs = ('name', 'i2c_addr', 'dev_id', 'version',
-             'debounce_ms', 'interrupts',
-             'led_bright', 'led_gran', 'led_cycle_ms', 'led_off_ms',
-             'status',
-             'press_queue', 'last_press_ms', 'first_press_ms',
-             'click_queue', 'last_click_ms', 'first_click_ms')
+    attrs = (
+        "name",
+        "i2c_addr",
+        "dev_id",
+        "version",
+        "debounce_ms",
+        "interrupts",
+        "led_bright",
+        "led_gran",
+        "led_cycle_ms",
+        "led_off_ms",
+        "status",
+        "press_queue",
+        "last_press_ms",
+        "first_press_ms",
+        "click_queue",
+        "last_click_ms",
+        "first_click_ms",
+    )
     for attr in attrs:
         print(attr, getattr(button, attr))
     print()
+
 
 while True:
     ack.clear()

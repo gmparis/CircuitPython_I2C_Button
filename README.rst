@@ -25,32 +25,32 @@ This driver depends on:
 
 Please ensure all dependencies are available on the CircuitPython filesystem.
 This is easily achieved by downloading
-`the Adafruit library and driver bundle <https://circuitpython.org/libraries>`_.
+`the Adafruit library and driver bundle <https://circuitpython.org/libraries>`_
+or individual libraries can be installed using
+`circup <https://github.com/adafruit/circup>`_.
 
-Installing from PyPI
-=====================
+Installing to a Connected CircuitPython Device with Circup
+==========================================================
 
-On supported GNU/Linux systems like the Raspberry Pi, you can install the driver locally `from
-PyPI <https://pypi.org/project/circuitpython-i2c-button/>`_. To install for current user:
-
-.. code-block:: shell
-
-    pip3 install circuitpython-i2c-button
-
-To install system-wide (this may be required in some cases):
+Make sure that you have ``circup`` installed in your Python environment.
+Install it with the following command if necessary:
 
 .. code-block:: shell
 
-    sudo pip3 install circuitpython-i2c-button
+    pip3 install circup
 
-To install in a virtual environment in your current project:
+With ``circup`` installed and your CircuitPython device connected use the
+following command to install:
 
 .. code-block:: shell
 
-    mkdir project-name && cd project-name
-    python3 -m venv .env
-    source .env/bin/activate
-    pip3 install circuitpython-i2c-button
+    circup install i2c_button
+
+Or the following command to update an existing version:
+
+.. code-block:: shell
+
+    circup update
 
 Usage Example
 =============
@@ -60,6 +60,7 @@ Usage Example
     import board
     import busio
     from i2c_button import I2C_Button
+
     i2c = busio.I2C(board.SCL, board.SDA)
     button = I2C_Button(i2c)
     print('firmware version is', button.version)

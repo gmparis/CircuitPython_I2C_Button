@@ -6,4 +6,3 @@
 
 .. automodule:: i2c_button
    :members:
-   :undoc-members:
