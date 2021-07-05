@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: Copyright (c) 2020 Greg Paris
+# SPDX-FileCopyrightText: Copyright (c) 2020,2021 Greg Paris
 #
 # SPDX-License-Identifier: MIT
 
@@ -8,10 +8,11 @@
 
 Demo changing the I2C address of a Sparkfun Qwiic Button/Switch/Arcade
 
-* Author(s): Gregory M Paris
+* Author(s): Greg Paris
 """
 
 # imports
+import sys
 import board
 import busio
 from i2c_button import I2C_Button
@@ -29,7 +30,7 @@ collision = NEW_ADDR in i2c.scan()
 i2c.unlock()
 if collision:
     print("there is already a device at address", hex(NEW_ADDR))
-    exit()
+    sys.exit()
 
 # initialize the button at the default I2C address
 button = I2C_Button(i2c, DEF_ADDR)
