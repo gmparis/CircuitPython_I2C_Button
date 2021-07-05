@@ -61,7 +61,7 @@ Usage Example
     import busio
     from i2c_button import I2C_Button
 
-    i2c = busio.I2C(board.SCL, board.SDA)
+    i2c = board.I2C()
     button = I2C_Button(i2c)
     print('firmware version is', button.version)
 
