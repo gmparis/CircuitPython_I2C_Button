@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: Copyright (c) 2020 Greg Paris
+# SPDX-FileCopyrightText: Copyright (c) 2020,2021 Greg Paris
 #
 # SPDX-License-Identifier: MIT
 
@@ -12,7 +12,7 @@
 CircuitPython I2C Button à la Sparkfun Qwiic Button/Switch/Arcade
 
 
-* Author(s): Gregory M Paris
+* Author(s): Greg Paris
 
 Implementation Notes
 --------------------
@@ -44,25 +44,28 @@ __repo__ = "https://github.com/gmparis/CircuitPython_i2c_button.git"
 _ENDIAN = "little"
 _DEF_ADDR = 0x6F
 _DEV_ID = 0x5D
+
 # Button status flags and tuple
 _BS_EVENT = 0x1  # clear after use
 _BS_CLICKED = 0x2  # clear after use
 _BS_PRESSED = 0x4  # user immutable
 _BS = namedtuple("_BS", ("available", "been_clicked", "is_pressed"))
+
 # Interrupt status flags
-_INT_CL = 0x1  # enable an interrupt on button click
-_INT_PR = 0x2  # enable an interrupt on button press
-_INT = namedtuple("_INT", ("on_click", "on_press"))
+# _INT_CL = 0x1  # enable an interrupt on button click
+# _INT_PR = 0x2  # enable an interrupt on button press
+# _INT = namedtuple("_INT", ("on_click", "on_press"))
+
 # Queue status flags and tuple
-_QS_POP = 0x1  # set to pop from queue
-_QS_EMPTY = 0x2  # user immutable
-_QS_FULL = 0x4  # user immutable
-_QS = namedtuple("_QS", ("empty", "full"))
+# _QS_POP = 0x1  # set to pop from queue
+# _QS_EMPTY = 0x2  # user immutable
+# _QS_FULL = 0x4  # user immutable
+# _QS = namedtuple("_QS", ("empty", "full"))
 
-
-def _to_qs(status):
-    """Queue status integer to **_QS** tuple."""
-    return _QS((status & _QS_EMPTY != 0), (status & _QS_FULL != 0))
+# Commented out due to low utility.
+# def _to_qs(status):
+#    """Queue status integer to **_QS** tuple."""
+#    return _QS((status & _QS_EMPTY != 0), (status & _QS_FULL != 0))
 
 
 class ButtonError(Exception):
@@ -106,7 +109,7 @@ class _Reg:
 # NOTE: This class is sortable and hashable to make it easier
 # to organize buttons when one has more than a few.
 # If you don't need this functionality, you can comment out the
-# lines as noted below and save a some memory.
+# lines as noted below and save some memory.
 class I2C_Button:
     # pylint: disable=line-too-long
     """I2C-connected button, à la Sparkfun Qwiic Button/Switch/Arcade
@@ -115,8 +118,23 @@ class I2C_Button:
     :param i2c_addr: I2C address of the button
     :param dev_id: Device ID of the button
     :param name: a name for the button
+    :raises ButtonError: if device I2C address does match the specified device ID
 
-    Raises :class:`ButtonError` if the device at the I2C address does not have the specified (default if not specified) device ID.
+    Besides being connected via I2C, which can provide some advantages when wiring up a project,
+    the I2C Button's chief advantage is that it has its own processor, which monitors the
+    state of the physical button. It does debouncing. It keeps track of time since the last
+    click event and the last press event. It reports whether a button has been pressed or
+    has been clicked since its state was last cleared. It can even manage operation of a
+    single (user-supplied) LED. That's a lot of processing that the calling program does not
+    have to do.
+
+    It should have functionality associated with keeping a queue of events. Unfortunately,
+    at the time of writing this, the only firmware available doesn't quite hit the mark when
+    it comes to queue management. It is not possible to clear the queues, nor does popping
+    an entry off a queue have an effect on its length. Previous versions of this library
+    included methods for interacting with the queues, but since they don't work, they waste
+    space and potentially waste the time of someone trying to use them. Those methods have
+    been commented out in this version of this library.
     """
 
     def __init__(self, i2c_obj, i2c_addr=_DEF_ADDR, dev_id=_DEV_ID, name="button"):
@@ -161,9 +179,11 @@ class I2C_Button:
     _fwmin = _Reg(0x01, 1, True)  # FIRMWARE_MINOR (ro)
     _fwmaj = _Reg(0x02, 1, True)  # FIRMWARE_MAJOR (ro)
     _bs = _Reg(0x03, 1)  # BUTTON_STATUS (see _BS flags above)
-    _int = _Reg(0x04, 1)  # INTERRUPT_CONFIG (see _INT flags above)
-    _prqs = _Reg(0x07, 1)  # PRESSED_QUEUE_STATUS (see _QS flags above)
-    _clqs = _Reg(0x10, 1)  # CLICKED_QUEUE_STATUS (see _QS flags above)
+
+    # Next three commented out due to low utility.
+    #   _int = _Reg(0x04, 1)  # INTERRUPT_CONFIG (see _INT flags above)
+    #   _prqs = _Reg(0x07, 1)  # PRESSED_QUEUE_STATUS (see _QS flags above)
+    #   _clqs = _Reg(0x10, 1)  # CLICKED_QUEUE_STATUS (see _QS flags above)
 
     #: Device ID. (1 byte; read-only)
     dev_id = _Reg(0x00, 1, True)
@@ -176,7 +196,7 @@ class I2C_Button:
 
     #: Time since oldest press in queue in milliseconds. (4 bytes; read-only)
     #:
-    #: Note that with firmware version 257, there is no way to clear the
+    #: Note that with firmware version 1.1, there is no way to clear the
     #: queue, so this value is less useful than it might first seem.
     first_press_ms = _Reg(0x0C, 4, True)
 
@@ -185,7 +205,7 @@ class I2C_Button:
 
     #: Time since oldest click in queue in milliseconds. (4 bytes; read-only)
     #:
-    #: Note that with firmware version 257, there is no way to clear the
+    #: Note that with firmware version 1.1, there is no way to clear the
     #: queue, so this value is less useful than it might first seem.
     first_click_ms = _Reg(0x15, 4, True)
 
@@ -201,8 +221,12 @@ class I2C_Button:
     #: LED pulse off time in milliseconds. (4 bytes; read-write)
     led_off_ms = _Reg(0x1D, 2)
 
-    # pylint: disable=line-too-long
-    #: Button I2C address. Change is persistent. Invalidates current :class:`I2C_Button` object. (1 byte; read-write)
+    #: Button I2C address. (1 byte; read-write)
+    #:
+    #: If you set this property, you are changing the I2C address of the button. That change
+    #: will persist through power-off. When you make such a change, the :class:`I2C_Button`
+    #: instance will become invalid. Probably best to just make any such changes in a separate
+    #: program. One of the examples shows this.
     i2c_addr = _Reg(0x1F, 1)
 
     @property
@@ -210,10 +234,15 @@ class I2C_Button:
         """Button name."""
         return self._name
 
+    #   @property
+    #   def version(self):
+    #       """Firmware version number. (2 bytes; read-only)"""
+    #       return (self._fwmaj << 8) | self._fwmin  # same way as Arduino library but kooky
+
     @property
     def version(self):
-        """Firmware version number. (2 bytes; read-only)"""
-        return (self._fwmaj << 8) | self._fwmin  # same as Arduino library value
+        """Firmware version string (read-only)"""
+        return f"{self._fwmaj:d}.{self._fwmin:d}"
 
     @property
     def status(self):
@@ -229,14 +258,13 @@ class I2C_Button:
         """Reset button status."""
         self._bs = 0
 
-    # Commented out due to low utility.
 
-
+# Commented out due to low utility.
 #   @property
 #   def click_queue(self):
 #       """Click queue status. (**empty**, **full** tuple; read-only)
 #
-#       The utility of this method is low if firmware version is 257.
+#       The utility of this method is low if firmware version is 1.1.
 #       This is because the queue is not cleared by **clear()**,
 #       nor are entries removed with **pop_click_queue()**."""
 #       return _to_qs(self._clqs)
@@ -245,13 +273,13 @@ class I2C_Button:
 #   def pop_click_queue(self):
 #       """Get time since first click, pop click queue, return time.
 #
-#       Popping the click queue does not work with firmware version 257,
+#       Popping the click queue does not work with firmware version 1.1,
 #       so this method rasies an exception in that case.
 #
-#       Raises :class:`ButtonError` if queue is empty.
-#       Raises :class:`RuntimeError` if firmware version is 257.
+#       :raises ButtonError: if queue is empty
+#       :raises RuntimeError: if firmware version is 1.1
 #       """
-#       if self.version == 257:
+#       if self.version == "1.1":
 #           raise RuntimeError("unsupported by firmware version")
 #       if self.click_queue.empty:
 #           raise ButtonError("click queue is empty")
@@ -264,7 +292,7 @@ class I2C_Button:
 #   def press_queue(self):
 #       """Press queue status. (**empty**, **full** tuple; read-only)
 #
-#       The utility of this method is low if firmware version is 257.
+#       The utility of this method is low if firmware version is 1.1.
 #       This is because the queue is not cleared by **clear()**,
 #       nor are entries removed with **pop_press_queue()**."""
 #       return _to_qs(self._prqs)
@@ -273,13 +301,13 @@ class I2C_Button:
 #   def pop_press_queue(self):
 #       """Get time since first press, pop press queue, return time.
 #
-#       Popping the press queue does not work with firmware version 257,
+#       Popping the press queue does not work with firmware version 1.1,
 #       so this method rasies an exception in that case.
 #
-#       Raises :class:`ButtonError` if queue is empty.
-#       Raises :class:`RuntimeError` if firmware version is 257.
+#       :raises ButtonError: if queue is empty
+#       :raises RuntimeError: if firmware version is 1.1
 #       """
-#       if self.version == 257:
+#       if self.version == "1.1":
 #           raise RuntimeError("unsupported by firmware version")
 #       if self.press_queue.empty:
 #           raise ButtonError("press queue is empty")
